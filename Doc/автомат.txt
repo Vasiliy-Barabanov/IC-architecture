@@ -1,0 +1,41 @@
+@startuml
+class starting
+class auto
+class hand
+class get_data
+class analisis
+class engine_on
+class engine_off
+class on
+class off
+class error
+
+on --> starting : Event-press_on
+starting --> auto : Event-select_auto
+starting --> hand : Event-select_hand
+auto --> get_data: cam_connect
+hand -> auto: Event-select_auto
+auto -> hand: Event-select_hand
+get_data --> analisis
+analisis --> engine_on : state-no_sun
+analisis --> engine_off : state-sun
+hand --> engine_on : Event-press_engine_on
+hand --> engine_off : Event-press_engine_off
+on --> off : Event-press_off
+auto --> off : Event-press_off
+hand --> off : Event-press_off
+engine_on --> off : Event-press_off
+engine_off --> off : Event-press_off
+off-->on: Event-press_on
+
+
+starting ->error: no_signal
+auto ->error: no_signal
+hand ->error: no_signal
+get_data ->error: cam_error
+analisis ->error: sun_error
+engine_on ->error: no_signal
+engine_off ->error: engine_is_working
+on ->error: no_signal
+off ->error: system_is_working
+@enduml
