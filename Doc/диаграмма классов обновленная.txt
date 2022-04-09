@@ -1,0 +1,62 @@
+@startuml
+class Sun
+{
+    posX: double
+    posY: double
+}
+
+class Power_generator
+{
+    powerState: bool
+    rmp: double
+    start()
+    stop()
+}
+
+class image
+{
+    imx: double
+    imy: double
+}
+
+class Camera
+{
+    picture: image
+    takePhoto()
+}
+
+class Systema
+{
+    state: statuses
+    pictures[300]: image
+    speed double
+    time: double
+    genState: bool
+    WorkMode: bool
+    setState()
+    analysis()
+    Generator()
+    Get_data()
+}
+
+class CloudService
+{
+    speed: double
+    time: double
+    giveData()
+    sendData()
+}
+
+class User
+{
+    Dspeed: double
+    Dtime: double
+}
+
+image - Camera : create 
+Camera - Systema : transport a photo 
+Systema - CloudService : give a speed and time 
+Systema -- Power_generator: start/stop 
+CloudService -- User : give a data 
+Camera -- Sun : direct to sun
+@enduml
