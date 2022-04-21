@@ -1,11 +1,14 @@
-﻿#include <iostream>
+#include <iostream>
 #include <string>
+#include <fstream>
 
 using namespace std;
 
 struct Image {
-	double imx;
-	double imy;
+	int imx;
+	int imy;
+	int pic[10][10];
+
 };
 
 struct Sun
@@ -21,7 +24,17 @@ class Camera
 public:
 	Image takePhoto()
 	{
-
+		ifstream f;
+		f.open("photo1");
+		char* buf = new char[10];
+		for (int i = 0; i < 10; i++){
+			f.getline(buf, 10);
+			for (int j = 0; j < 10; j++) {
+				picture.pic[i][j] = buf[j];
+			}
+		}
+		delete buf;
+		return picture;
 	}
 	Sun directToSun() {
 
@@ -46,8 +59,8 @@ class Generator
 private:
 	double rmp;
 public:
-	Generator() {};
-	~Generator() {};
+	Generator(Sstates state ) {};
+	~Generator() { rmp = 0; };
 	void Start() {
 
 	}
@@ -60,20 +73,20 @@ enum Sstates { starting, Son, Soff, Eon, Eoff, automat, manual, error, recvdata,
 
 class Systema {
 	Sstates state;
-	Image pictures[300];
+	Image pictures[1];
 	double speed;
 	double time;
 	bool genState;
 	bool workMode;
+	Generator gen;
 public:
 	Systema() {
-		state = Soff;  //system off
+		state = Sstates::Soff;  //system off
 	}
 	~Systema() {}
 	void setState(Sstates s) {
 		switch (s)
 		{
-
 		case(Sstates::starting):
 			if (state == Son) {
 				state = starting;
@@ -87,26 +100,26 @@ public:
 				state = Son;
 				cout << "SYSTEM::system ON" << endl;
 			}
-			
 			break;
-
 		case (Sstates::Soff):
 			state = Soff;
 			cout << "SYSTEM::system OFF" << endl;
 			break;
 
 		case (Sstates::Eon):
-			if (state == analysis || state==manual)
+			if (state== Sstates::analysis || state==manual)
 			{
 				state = Eon;
+				gen.Start();
 				cout << "SYSTEM::system Eon" << endl;
 			}
 			break;
 
 		case (Sstates::Eoff):
-			if (state == analysis || state == manual)
+			if (state == Sstates::analysis || state == manual)
 			{
 				state = Eoff;
+				gen.Stop();
 				cout << "SYSTEM::system Eoff" << endl;
 			}
 			break;
@@ -129,7 +142,7 @@ public:
 				break;
 
 		case (Sstates::analysis):
-					state = analysis;
+					state = Sstates::analysis;
 					break;
 		}
 
@@ -138,13 +151,23 @@ public:
 	void Get_data() {
 		
 	}
-	void analysis()
+	bool analysis(Image im)
 	{
-
-	}
-	void Generator()
-	{
-
+		Sun sun;
+		sun.posX = -1;
+		sun.posY = -1;
+		for (int i = 0; i < 10; i++) {
+			for (int j = 0; j < 10; j++) {
+				if (pictures[1].pic[i][j] == 2) {
+					sun.posX = i;
+					sun.posY = j;
+				}
+			}
+		}
+		if (sun.posX == -1) {
+			return false;
+		}
+		return true;
 	}
 };
 
