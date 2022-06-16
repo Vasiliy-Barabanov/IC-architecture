@@ -1,0 +1,11 @@
+FROM ubuntu:16.04
+
+FROM gcc:latest 
+
+COPY . /usr/scr/cpp_test
+
+WORKDIR /usr/scr/cpp_test
+
+RUN g++ -o Test avtomat.cpp
+
+CMD ["./Test"]
